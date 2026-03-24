@@ -70,6 +70,33 @@ body {
     var(--surface);
 }
 
+.hero-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.environment-switch {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.environment-switch select {
+  border: 1px solid #d4c6b9;
+  border-radius: 10px;
+  padding: 0.45rem 0.55rem;
+  background: #fff;
+  color: var(--ink);
+  font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+  min-width: 140px;
+}
+
 .filters-panel {
   padding: 1rem;
   position: sticky;
@@ -317,6 +344,11 @@ th {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+  }
+
+  .hero-top-row {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .metrics-grid,

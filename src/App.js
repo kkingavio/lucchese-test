@@ -1,6 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { entityTypes, statusTypes, transactionLogs } from './data/transactionLogs';
 
+const environmentOptions = [
+  { value: 'LOCAL', label: 'Local', tableName: 'dbo.LOCAL_TRANSACTION_LOG' },
+  { value: 'DEV', label: 'Dev', tableName: 'dbo.DEV_TRANSACTION_LOG' },
+  { value: 'PROD', label: 'Prod', tableName: 'dbo.PROD_TRANSACTION_LOG' },
+];
+
 function formatEntityType(type) {
   return type
     .split('_')
@@ -29,11 +35,16 @@ function statusClassName(status) {
 }
 
 function App() {
+  const [selectedEnvironment, setSelectedEnvironment] = useState('LOCAL');
   const [selectedEntity, setSelectedEntity] = useState('ALL');
   const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const activeEnvironment =
+    environmentOptions.find((option) => option.value === selectedEnvironment) ||
+    environmentOptions[0];
 
   const filteredLogs = useMemo(() => {
     const fromTimestamp = dateFrom ? new Date(dateFrom).getTime() : null;
@@ -204,11 +215,28 @@ function App() {
 
         <div className="content-column">
           <section className="hero">
-            <p className="eyebrow">Integration Operations</p>
+            <div className="hero-top-row">
+              <p className="eyebrow">Integration Operations</p>
+              <label className="environment-switch" htmlFor="environment-switch">
+                Environment
+                <select
+                  id="environment-switch"
+                  value={selectedEnvironment}
+                  onChange={(event) => setSelectedEnvironment(event.target.value)}
+                >
+                  {environmentOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
             <h1>Transfer Dashboard</h1>
             <p className="hero-copy">
               Demo view powered by the DEV_TRANSACTION_LOG model for item, vendor,
               purchase order, and sales order transfers between NetSuite and OracleWMS.
+              Active table: {activeEnvironment.tableName}.
             </p>
           </section>
 
@@ -251,7 +279,7 @@ function App() {
           <section className="panel">
             <div className="panel-title-row">
               <h2>Recent Transaction Log</h2>
-              <span>Hard-coded sample rows</span>
+              <span>{activeEnvironment.label} view ({activeEnvironment.tableName})</span>
             </div>
             <div className="table-wrap">
               <table>
